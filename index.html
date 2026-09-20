@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Γουλιά – Σημεία Πώλησης</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <header class="header">
+    <div class="logo-container">
+      <h1>🧃 Γουλιά</h1>
+      <p>Φυσικοί Χυμοί & Πορτοκαλάδες</p>
+    </div>
+    <h2>Σημεία Πώλησης</h2>
+  </header>
+
+  <main class="container">
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="🔍 Αναζήτηση (π.χ. Κάρυστος, Κηφισιά)...">
+    </div>
+
+    <div class="filter-buttons">
+      <button class="btn active" onclick="filterRegion('ALL', event)">Όλα</button>
+      <button class="btn" onclick="filterRegion('ΑΤΤΙΚΗ', event)">Αττική</button>
+      <button class="btn" onclick="filterRegion('ΕΥΒΟΙΑ', event)">Εύβοια & Βοιωτία</button>
+    </div>
+
+    <div id="count" class="count-info"></div>
+
+    <div id="locationsList" class="locations-grid"></div>
+  </main>
+
+  <script>
+    let allLocations = [];
+    let currentRegion = 'ALL';
+
+    async function loadLocations() {
+      try {
+        const response = await fetch('data.json');
+        allLocations = await response.json();
+        renderLocations();
+      } catch (error) {
+        console.error('Σφάλμα φόρτωσης δεδομένων:', error);
+      }
+    }
+
+    function renderLocations() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      const listContainer = document.getElementById('locationsList');
+      listContainer.innerHTML = '';
+
+      const filtered = allLocations.filter(loc => {
+        const matchesRegion = (currentRegion === 'ALL') || (loc.region === currentRegion);
+        const matchesSearch = loc.name.toLowerCase().includes(searchTerm) ||
+                              loc.city.toLowerCase().includes(searchTerm) ||
+                              loc.address.toLowerCase().includes(searchTerm);
+        return matchesRegion && matchesSearch;
+      });
+
+      document.getElementById('count').innerText = `Βρέθηκαν ${filtered.length} σημεία`;
+
+      if (filtered.length === 0) {
+        listContainer.innerHTML = '<p class="no-results">Δεν βρέθηκαν σημεία πώλησης.</p>';
+        return;
+      }
+
+      filtered.forEach(loc => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="card-header">
+            <span class="badge badge-region">${loc.region}</span>
+            ${loc.category ? `<span class="badge badge-cat">${loc.category}</span>` : ''}
+          </div>
+          <h3 class="store-name">${loc.name}</h3>
+          <p class="store-city">📍 ${loc.city}</p>
+          <p class="store-address">${loc.address}</p>
+          <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc.name + ' ' + loc.city + ' ' + loc.address)}" 
+             target="_blank" class="map-link">Προβολή στο Χάρτη ➔</a>
+        `;
+        listContainer.appendChild(card);
+      });
+    }
+
+    function filterRegion(region, e) {
+      currentRegion = region;
+      document.querySelectorAll('.btn').forEach(btn => btn.classList.remove('active'));
+      e.target.classList.add('active');
+      renderLocations();
+    }
+
+    document.getElementById('searchInput').addEventListener('input', renderLocations);
+    loadLocations();
+  </script>
+</body>
+</html>
