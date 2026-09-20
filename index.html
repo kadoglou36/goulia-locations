@@ -18,56 +18,30 @@
   </header>
 
   <main class="container">
-    <div class="search-box">
-      <input type="text" id="searchInput" placeholder="🔍 Αναζήτηση (π.χ. Κάρυστος, Κηφισιά)...">
-    </div>
-
-    <div class="filter-buttons">
-      <button class="btn active" onclick="filterRegion('ALL', event)">Όλα</button>
-      <button class="btn" onclick="filterRegion('ΑΤΤΙΚΗ', event)">Αττική</button>
-      <button class="btn" onclick="filterRegion('ΕΥΒΟΙΑ', event)">Εύβοια & Βοιωτία</button>
-    </div>
-
-    <div id="count" class="count-info"></div>
-
     <div id="locationsList" class="locations-grid"></div>
   </main>
 
   <script>
-    let allLocations = [];
-    let currentRegion = 'ALL';
-
     async function loadLocations() {
       try {
         const response = await fetch('data.json');
-        allLocations = await response.json();
-        renderLocations();
+        const allLocations = await response.json();
+        renderLocations(allLocations);
       } catch (error) {
         console.error('Σφάλμα φόρτωσης δεδομένων:', error);
       }
     }
 
-    function renderLocations() {
-      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    function renderLocations(locations) {
       const listContainer = document.getElementById('locationsList');
       listContainer.innerHTML = '';
 
-      const filtered = allLocations.filter(loc => {
-        const matchesRegion = (currentRegion === 'ALL') || (loc.region === currentRegion);
-        const matchesSearch = loc.name.toLowerCase().includes(searchTerm) ||
-                              loc.city.toLowerCase().includes(searchTerm) ||
-                              loc.address.toLowerCase().includes(searchTerm);
-        return matchesRegion && matchesSearch;
-      });
-
-      document.getElementById('count').innerText = `Βρέθηκαν ${filtered.length} σημεία`;
-
-      if (filtered.length === 0) {
-        listContainer.innerHTML = '<p class="no-results">Δεν βρέθηκαν σημεία πώλησης.</p>';
+      if (locations.length === 0) {
+        listContainer.innerHTML = '<p class="no-results">Δεν υπάρχουν διαθέσιμα σημεία πώλησης.</p>';
         return;
       }
 
-      filtered.forEach(loc => {
+      locations.forEach(loc => {
         const card = document.createElement('div');
         card.className = 'card';
         card.innerHTML = `
@@ -85,14 +59,6 @@
       });
     }
 
-    function filterRegion(region, e) {
-      currentRegion = region;
-      document.querySelectorAll('.btn').forEach(btn => btn.classList.remove('active'));
-      e.target.classList.add('active');
-      renderLocations();
-    }
-
-    document.getElementById('searchInput').addEventListener('input', renderLocations);
     loadLocations();
   </script>
 </body>
