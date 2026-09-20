@@ -1,0 +1,166 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background-color: #f8f9fa;
+  color: #333;
+  padding-bottom: 40px;
+}
+
+.header {
+  background: linear-gradient(135deg, #ff9900, #ff5500);
+  color: white;
+  text-align: center;
+  padding: 30px 20px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.logo-container h1 {
+  font-size: 2.2rem;
+  margin-bottom: 4px;
+}
+
+.logo-container p {
+  font-size: 0.95rem;
+  opacity: 0.9;
+  margin-bottom: 12px;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.search-box {
+  margin-bottom: 15px;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 14px 18px;
+  font-size: 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  outline: none;
+  transition: border 0.3s;
+}
+
+.search-box input:focus {
+  border-color: #ff9900;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+  padding-bottom: 5px;
+}
+
+.btn {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  background-color: #e9ecef;
+  color: #495057;
+  font-weight: 600;
+  border-radius: 20px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.3s;
+}
+
+.btn.active, .btn:hover {
+  background-color: #ff9900;
+  color: white;
+}
+
+.count-info {
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin-bottom: 15px;
+}
+
+.locations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 15px;
+}
+
+.card {
+  background: white;
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid #f0f0f0;
+}
+
+.card-header {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.badge {
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.badge-region {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.badge-cat {
+  background-color: #e2e3e5;
+  color: #383d41;
+}
+
+.store-name {
+  font-size: 1.1rem;
+  color: #212529;
+  margin-bottom: 6px;
+}
+
+.store-city {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #ff5500;
+  margin-bottom: 4px;
+}
+
+.store-address {
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin-bottom: 12px;
+}
+
+.map-link {
+  font-size: 0.85rem;
+  color: #ff9900;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.map-link:hover {
+  text-decoration: underline;
+}
+
+.no-results {
+  text-align: center;
+  color: #6c757d;
+  grid-column: 1 / -1;
+  padding: 30px;
+}
