@@ -1,0 +1,30 @@
+[
+  {
+    "region": "ΑΤΤΙΚΗ",
+    "name": "ΘΑΝΟΠΟΥΛΟΣ",
+    "address": "ΕΛΑΙΩΝ 38",
+    "city": "ΚΗΦΙΣΙΑ",
+    "category": "Σούπερ Μάρκετ"
+  },
+  {
+    "region": "ΑΤΤΙΚΗ",
+    "name": "ERRIKOS MICROBAKERY",
+    "address": "ΤΑΤΟΪΟΥ 122",
+    "city": "ΝΕΑ ΕΡΥΘΡΑΙΑ",
+    "category": "Φούρνος"
+  },
+  {
+    "region": "ΕΥΒΟΙΑ",
+    "name": "ROYAL CAFÉ",
+    "address": "ΠΑΡΑΛΙΑ",
+    "city": "ΚΑΡΥΣΤΟΣ",
+    "category": "Καφέ"
+  },
+  {
+    "region": "ΕΥΒΟΙΑ",
+    "name": "ΣΟΥΠΕΡ ΜΑΡΚΕΤ ΚΡΗΤΙΚΟΣ",
+    "address": "ΚΕΝΤΡΟ",
+    "city": "ΚΑΡΥΣΤΟΣ",
+    "category": "Σούπερ Μάρκετ"
+  }
+]
