@@ -46,6 +46,7 @@
 
   <main id="adminView" class="container page-view" hidden>
     <div class="list-heading"><div><p class="eyebrow">Περιοχή διαχειριστή</p><h2>Διαχείριση καταστημάτων</h2></div><span id="adminCount" class="result-count"></span></div>
+    <p class="save-hint">Οι αλλαγές ζουν προσωρινά σε αυτή τη σελίδα. Πάτησε <strong>"Λήψη data.json"</strong> και αντικατέστησε το αρχείο <code>data.json</code> στον φάκελο του project για να αποθηκευτούν μόνιμα.</p>
     <form id="locationForm" class="admin-form page-form">
       <input type="hidden" id="editingIndex" value="">
       <label>Όνομα καταστήματος<input id="storeName" required></label>
@@ -59,6 +60,9 @@
       </div>
       <p id="adminMessage" class="form-message" role="status"></p>
     </form>
+    <div class="admin-list-header">
+      <button id="downloadData" class="text-button" type="button">⬇ Λήψη data.json</button>
+    </div>
     <div id="adminLocationsList" class="admin-list"></div>
   </main>
 
@@ -76,7 +80,7 @@
 
     async function loadLocations() {
       try {
-        const response = await fetch('data.json');
+        const response = await fetch(`data.json?t=${Date.now()}`, { cache: 'no-store' });
           if (!response.ok) throw new Error('Data unavailable');
         const allLocations = await response.json();
           state.locations = allLocations; renderFilters(); renderLocations();
@@ -170,6 +174,16 @@
         renderFilters(); renderLocations(); renderAdminList();
         document.getElementById('adminMessage').textContent = 'Διαγράφηκε.';
       }
+
+      document.getElementById('downloadData').addEventListener('click', () => {
+        const blob = new Blob([JSON.stringify(state.locations, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'data.json';
+        link.click();
+        URL.revokeObjectURL(url);
+      });
 
       if (new URLSearchParams(location.search).has('admin')) showView('login');
 

@@ -302,6 +302,27 @@ h1 {
 
 .form-actions { display: flex; align-items: center; gap: 14px; }
 
+.save-hint {
+  background: var(--orange-soft);
+  color: var(--orange-dark);
+  font-size: .75rem;
+  padding: 10px 14px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+}
+
+.save-hint code {
+  background: rgba(255, 255, 255, 0.6);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.admin-list-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 8px;
+}
+
 .admin-form label {
   display: grid;
   font-size: .75rem;
