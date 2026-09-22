@@ -46,6 +46,9 @@
   <script>
     const state = { locations: [], region: 'ALL', query: '' };
     const eviaOrder = ['ΧΑΛΚΙΔΑ', 'ΒΑΣΙΛΙΚΟ', 'ΕΡΕΤΡΙΑ', 'ΑΜΑΡΥΝΘΟΣ', 'ΑΛΙΒΕΡΙ', 'ΒΕΛΟΣ', 'ΚΟΡΑΣΙΔΑ', 'ΝΕΟΧΩΡΙ', 'ΚΑΛΑΜΟΣ', 'ΛΕΠΟΥΡΑ', 'ΑΓ. ΑΠΟΣΤΟΛΟΙ', 'ΜΕΣΟΧΩΡΙΑ', 'ΝΕΑ ΣΤΥΡΑ', 'ΠΑΝΩ ΣΤΥΡΑ', 'ΜΑΡΜΑΡΙ', 'ΚΑΡΥΣΤΟΣ', 'ΠΑΡΑΛΙΑ ΚΥΜΗΣ', 'ΜΑΛΕΤΙΑΝΟΙ', 'ΚΑΘΕΝΟΙ'];
+    // Εύβοια πρώτη, μετά Αθήνα (ΑΤΤΙΚΗ) — σταθερή σειρά ανεξάρτητα από τη σειρά στο data.json
+    const regionOrder = ['ΕΥΒΟΙΑ', 'ΑΤΤΙΚΗ'];
+    const regionLabels = { 'ΕΥΒΟΙΑ': 'Εύβοια', 'ΑΤΤΙΚΗ': 'Αθήνα' };
     const adminPanel = document.getElementById('adminPanel');
 
     async function loadLocations() {
@@ -62,22 +65,27 @@
       function normalize(value) { return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase(); }
 
       function renderFilters() {
-        const regions = ['ALL', ...new Set(state.locations.map(location => location.region))];
-        document.getElementById('regionFilters').innerHTML = regions.map(region => `<button class="filter-button ${state.region === region ? 'active' : ''}" data-region="${region}" role="tab" aria-selected="${state.region === region}">${region === 'ALL' ? 'Όλα' : region}</button>`).join('');
+        const regions = ['ALL', ...regionOrder.filter(region => state.locations.some(location => location.region === region))];
+        document.getElementById('regionFilters').innerHTML = regions.map(region => `<button class="filter-button ${state.region === region ? 'active' : ''}" data-region="${region}" role="tab" aria-selected="${state.region === region}">${region === 'ALL' ? 'Όλα' : (regionLabels[region] || region)}</button>`).join('');
         document.querySelectorAll('[data-region]').forEach(button => button.addEventListener('click', () => { state.region = button.dataset.region; renderFilters(); renderLocations(); }));
       }
 
       function renderLocations() {
         const query = normalize(state.query);
         const filtered = state.locations.filter(location => (state.region === 'ALL' || location.region === state.region) && normalize(`${location.name} ${location.city} ${location.address}`).includes(query));
-        const grouped = filtered.reduce((groups, location) => { (groups[location.city] ||= []).push(location); return groups; }, {});
+        const grouped = filtered.reduce((groups, location) => { (groups[location.region] ||= []).push(location); return groups; }, {});
       const listContainer = document.getElementById('locationsList');
         document.getElementById('resultCount').textContent = `${filtered.length} σημεία`;
-        const cities = Object.keys(grouped).sort((a, b) => {
-          if (state.region !== 'ΕΥΒΟΙΑ') return a.localeCompare(b, 'el');
-          return (eviaOrder.indexOf(a) < 0 ? 999 : eviaOrder.indexOf(a)) - (eviaOrder.indexOf(b) < 0 ? 999 : eviaOrder.indexOf(b));
-        });
-        listContainer.innerHTML = cities.map(city => `<section class="city-group"><div class="city-heading"><h3>${city}</h3><span>${grouped[city].length}</span></div><div class="store-list">${grouped[city].map(location => `<a class="store-row" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${location.name} ${location.address} ${location.city}`)}" target="_blank" rel="noopener"><span class="store-info"><strong>${location.name}</strong><small>${location.address || 'Χωρίς καταχωρημένη διεύθυνση'}</small></span><span class="map-arrow" aria-hidden="true">↗</span></a>`).join('')}</div></section>`).join('') || '<p class="no-results">Δεν βρέθηκαν σημεία με αυτά τα κριτήρια.</p>';
+        const regions = regionOrder.filter(region => grouped[region]);
+        listContainer.innerHTML = regions.map(region => {
+          const items = grouped[region].slice().sort((a, b) => {
+            const cityDiff = region === 'ΕΥΒΟΙΑ'
+              ? (eviaOrder.indexOf(a.city) < 0 ? 999 : eviaOrder.indexOf(a.city)) - (eviaOrder.indexOf(b.city) < 0 ? 999 : eviaOrder.indexOf(b.city))
+              : a.city.localeCompare(b.city, 'el');
+            return cityDiff !== 0 ? cityDiff : a.name.localeCompare(b.name, 'el');
+          });
+          return `<section class="city-group"><div class="city-heading"><h3>${regionLabels[region] || region}</h3><span>${items.length}</span></div><div class="store-list">${items.map(location => `<a class="store-row" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${location.name} ${location.address} ${location.city}`)}" target="_blank" rel="noopener"><span class="store-info"><strong>${location.name}</strong><small>${[location.city, location.address].filter(Boolean).join(' · ') || 'Χωρίς καταχωρημένη διεύθυνση'}</small></span><span class="map-arrow" aria-hidden="true">↗</span></a>`).join('')}</div></section>`;
+        }).join('') || '<p class="no-results">Δεν βρέθηκαν σημεία με αυτά τα κριτήρια.</p>';
     }
 
       document.getElementById('searchInput').addEventListener('input', event => { state.query = event.target.value; renderLocations(); });
