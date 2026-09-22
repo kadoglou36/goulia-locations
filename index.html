@@ -3,62 +3,90 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Γουλιά – Σημεία Πώλησης</title>
+    <meta name="theme-color" content="#e85d2a">
+    <title>Γουλιά | Πού θα μας βρεις</title>
+  
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <header class="header">
-    <div class="logo-container">
-      <h1>🧃 Γουλιά</h1>
-      <p>Φυσικοί Χυμοί & Πορτοκαλάδες</p>
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="brand-mark" aria-hidden="true">Γ</div>
+      <div>
+        <p class="eyebrow">Χειροποίητες ελληνικές γεύσεις</p>
+        <h1>Γουλιά</h1>
+        <p class="tagline">Λεμονάδα · Πορτοκαλάδα · Βυσσινάδα</p>
+      </div>
     </div>
-    <h2>Σημεία Πώλησης</h2>
+    <div class="hero-copy"><p>Βρες το κοντινότερο σημείο που σερβίρει τους χυμούς μας.</p></div>
   </header>
 
   <main class="container">
-    <div id="locationsList" class="locations-grid"></div>
+    <section class="toolbar" aria-label="Αναζήτηση σημείων πώλησης">
+      <label class="search-field"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" placeholder="Αναζήτηση σε πόλη ή κατάστημα" autocomplete="off"></label>
+      <div id="regionFilters" class="region-filters" role="tablist" aria-label="Περιοχή"></div>
+    </section>
+    <div class="list-heading"><div><p class="eyebrow">Σημεία πώλησης</p><h2>Πού θα μας βρεις</h2></div><span id="resultCount" class="result-count"></span></div>
+    <div id="locationsList" class="locations-list"></div>
   </main>
 
+  <footer class="footer"><span>Γουλιά, φτιαγμένη για να μοιράζεται.</span><a href="?admin=1" class="admin-link">Σύνδεση διαχειριστή</a></footer>
+
+  <div id="adminPanel" class="admin-panel" hidden>
+    <div class="admin-dialog" role="dialog" aria-modal="true" aria-labelledby="adminTitle">
+      <button id="closeAdmin" class="close-button" type="button" aria-label="Κλείσιμο">×</button>
+      <p class="eyebrow">Περιοχή διαχειριστή</p><h2 id="adminTitle">Ενημέρωσε τα σημεία</h2>
+      <form id="loginForm" class="admin-form"><label>Email<input id="adminEmail" type="email" required autocomplete="username"></label><label>Κωδικός<input id="adminPassword" type="password" required autocomplete="current-password"></label><button class="primary-button" type="submit">Σύνδεση</button><p id="loginMessage" class="form-message" role="status"></p></form>
+      <form id="locationForm" class="admin-form" hidden><label>Όνομα καταστήματος<input id="storeName" required></label><label>Πόλη<input id="storeCity" required></label><label>Διεύθυνση / περιοχή<input id="storeAddress"></label><label>Κατηγορία<input id="storeRegion" value="ΑΤΤΙΚΗ" required></label><button class="primary-button" type="submit">Προσθήκη καταστήματος</button><button id="logoutButton" class="text-button" type="button">Αποσύνδεση</button><p id="adminMessage" class="form-message" role="status"></p></form>
+    </div>
+  </div>
+
   <script>
+    const state = { locations: [], region: 'ALL', query: '' };
+    const eviaOrder = ['ΧΑΛΚΙΔΑ', 'ΒΑΣΙΛΙΚΟ', 'ΕΡΕΤΡΙΑ', 'ΑΜΑΡΥΝΘΟΣ', 'ΑΛΙΒΕΡΙ', 'ΒΕΛΟΣ', 'ΚΟΡΑΣΙΔΑ', 'ΝΕΟΧΩΡΙ', 'ΚΑΛΑΜΟΣ', 'ΛΕΠΟΥΡΑ', 'ΑΓ. ΑΠΟΣΤΟΛΟΙ', 'ΜΕΣΟΧΩΡΙΑ', 'ΝΕΑ ΣΤΥΡΑ', 'ΠΑΝΩ ΣΤΥΡΑ', 'ΜΑΡΜΑΡΙ', 'ΚΑΡΥΣΤΟΣ', 'ΠΑΡΑΛΙΑ ΚΥΜΗΣ', 'ΜΑΛΕΤΙΑΝΟΙ', 'ΚΑΘΕΝΟΙ'];
+    const adminPanel = document.getElementById('adminPanel');
+
     async function loadLocations() {
       try {
         const response = await fetch('data.json');
+          if (!response.ok) throw new Error('Data unavailable');
         const allLocations = await response.json();
-        renderLocations(allLocations);
+          state.locations = allLocations; renderFilters(); renderLocations();
       } catch (error) {
-        console.error('Σφάλμα φόρτωσης δεδομένων:', error);
+          document.getElementById('locationsList').innerHTML = '<p class="no-results">Δεν ήταν δυνατή η φόρτωση των σημείων.</p>';
       }
     }
 
-    function renderLocations(locations) {
+      function normalize(value) { return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase(); }
+
+      function renderFilters() {
+        const regions = ['ALL', ...new Set(state.locations.map(location => location.region))];
+        document.getElementById('regionFilters').innerHTML = regions.map(region => `<button class="filter-button ${state.region === region ? 'active' : ''}" data-region="${region}" role="tab" aria-selected="${state.region === region}">${region === 'ALL' ? 'Όλα' : region}</button>`).join('');
+        document.querySelectorAll('[data-region]').forEach(button => button.addEventListener('click', () => { state.region = button.dataset.region; renderFilters(); renderLocations(); }));
+      }
+
+      function renderLocations() {
+        const query = normalize(state.query);
+        const filtered = state.locations.filter(location => (state.region === 'ALL' || location.region === state.region) && normalize(`${location.name} ${location.city} ${location.address}`).includes(query));
+        const grouped = filtered.reduce((groups, location) => { (groups[location.city] ||= []).push(location); return groups; }, {});
       const listContainer = document.getElementById('locationsList');
-      listContainer.innerHTML = '';
-
-      if (locations.length === 0) {
-        listContainer.innerHTML = '<p class="no-results">Δεν υπάρχουν διαθέσιμα σημεία πώλησης.</p>';
-        return;
-      }
-
-      locations.forEach(loc => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-          <div class="card-header">
-            <span class="badge badge-region">${loc.region}</span>
-            ${loc.category ? `<span class="badge badge-cat">${loc.category}</span>` : ''}
-          </div>
-          <h3 class="store-name">${loc.name}</h3>
-          <p class="store-city">📍 ${loc.city}</p>
-          <p class="store-address">${loc.address}</p>
-          <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc.name + ' ' + loc.city + ' ' + loc.address)}" 
-             target="_blank" class="map-link">Προβολή στο Χάρτη ➔</a>
-        `;
-        listContainer.appendChild(card);
-      });
+        document.getElementById('resultCount').textContent = `${filtered.length} σημεία`;
+        const cities = Object.keys(grouped).sort((a, b) => {
+          if (state.region !== 'ΕΥΒΟΙΑ') return a.localeCompare(b, 'el');
+          return (eviaOrder.indexOf(a) < 0 ? 999 : eviaOrder.indexOf(a)) - (eviaOrder.indexOf(b) < 0 ? 999 : eviaOrder.indexOf(b));
+        });
+        listContainer.innerHTML = cities.map(city => `<section class="city-group"><div class="city-heading"><h3>${city}</h3><span>${grouped[city].length}</span></div><div class="store-list">${grouped[city].map(location => `<a class="store-row" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${location.name} ${location.address} ${location.city}`)}" target="_blank" rel="noopener"><span class="store-info"><strong>${location.name}</strong><small>${location.address || 'Χωρίς καταχωρημένη διεύθυνση'}</small></span><span class="map-arrow" aria-hidden="true">↗</span></a>`).join('')}</div></section>`).join('') || '<p class="no-results">Δεν βρέθηκαν σημεία με αυτά τα κριτήρια.</p>';
     }
 
+      document.getElementById('searchInput').addEventListener('input', event => { state.query = event.target.value; renderLocations(); });
+      function openAdmin() { adminPanel.hidden = false; document.body.classList.add('modal-open'); }
+      if (new URLSearchParams(location.search).has('admin')) openAdmin();
+      document.getElementById('closeAdmin').addEventListener('click', () => { adminPanel.hidden = true; document.body.classList.remove('modal-open'); });
+      document.getElementById('loginForm').addEventListener('submit', event => { event.preventDefault(); document.getElementById('loginForm').hidden = true; document.getElementById('locationForm').hidden = false; document.getElementById('adminMessage').textContent = 'Τοπική λειτουργία διαχείρισης ενεργή.'; });
+      document.getElementById('locationForm').addEventListener('submit', event => { event.preventDefault(); state.locations.push({ name: document.getElementById('storeName').value, city: document.getElementById('storeCity').value, address: document.getElementById('storeAddress').value, region: document.getElementById('storeRegion').value.toUpperCase() }); renderFilters(); renderLocations(); event.target.reset(); document.getElementById('storeRegion').value = 'ΑΤΤΙΚΗ'; document.getElementById('adminMessage').textContent = 'Προστέθηκε στη λίστα αυτής της συνεδρίας.'; });
+      document.getElementById('logoutButton').addEventListener('click', () => { document.getElementById('locationForm').hidden = true; document.getElementById('loginForm').hidden = false; });
     loadLocations();
   </script>
 </body>
