@@ -12,7 +12,6 @@
 <body>
 
   <header class="hero">
-    <a href="?admin=1" id="adminTopLink" class="admin-link-top">Σύνδεση διαχειριστή</a>
     <div class="hero-inner">
       <div class="brand-mark" aria-hidden="true">Γ</div>
       <div>
@@ -33,39 +32,6 @@
     <div id="locationsList" class="locations-list"></div>
   </main>
 
-  <main id="loginView" class="container page-view" hidden>
-    <div class="list-heading"><div><p class="eyebrow">Περιοχή διαχειριστή</p><h2>Σύνδεση</h2></div></div>
-    <form id="loginForm" class="admin-form page-form">
-      <label>Όνομα χρήστη<input id="adminUsername" type="text" required autocomplete="username"></label>
-      <label>Κωδικός<input id="adminPassword" type="password" required autocomplete="current-password"></label>
-      <button class="primary-button" type="submit">Σύνδεση</button>
-      <button id="cancelLogin" class="text-button" type="button">Πίσω στη σελίδα</button>
-      <p id="loginMessage" class="form-message" role="status"></p>
-    </form>
-  </main>
-
-  <main id="adminView" class="container page-view" hidden>
-    <div class="list-heading"><div><p class="eyebrow">Περιοχή διαχειριστή</p><h2>Διαχείριση καταστημάτων</h2></div><span id="adminCount" class="result-count"></span></div>
-    <p class="save-hint">Οι αλλαγές ζουν προσωρινά σε αυτή τη σελίδα. Πάτησε <strong>"Λήψη data.json"</strong> και αντικατέστησε το αρχείο <code>data.json</code> στον φάκελο του project για να αποθηκευτούν μόνιμα.</p>
-    <form id="locationForm" class="admin-form page-form">
-      <input type="hidden" id="editingIndex" value="">
-      <label>Όνομα καταστήματος<input id="storeName" required></label>
-      <label>Πόλη<input id="storeCity" required></label>
-      <label>Διεύθυνση / περιοχή<input id="storeAddress"></label>
-      <label>Κατηγορία<select id="storeRegion" required></select></label>
-      <label id="newRegionLabel" hidden>Νέα κατηγορία<input id="newRegionName" placeholder="π.χ. ΘΕΣΣΑΛΟΝΙΚΗ"></label>
-      <div class="form-actions">
-        <button id="submitLocation" class="primary-button" type="submit">Προσθήκη καταστήματος</button>
-        <button id="cancelEdit" class="text-button" type="button" hidden>Ακύρωση επεξεργασίας</button>
-      </div>
-      <p id="adminMessage" class="form-message" role="status"></p>
-    </form>
-    <div class="admin-list-header">
-      <button id="downloadData" class="text-button" type="button">⬇ Λήψη data.json</button>
-    </div>
-    <div id="adminLocationsList" class="admin-list"></div>
-  </main>
-
   <footer class="footer"><span>Γουλιά, φτιαγμένη για να μοιράζεται.</span></footer>
 
   <script>
@@ -74,9 +40,6 @@
     // Εύβοια πρώτη, μετά Αθήνα (ΑΤΤΙΚΗ) — σταθερή σειρά ανεξάρτητα από τη σειρά στο data.json
     const regionOrder = ['ΕΥΒΟΙΑ', 'ΑΤΤΙΚΗ'];
     const regionLabels = { 'ΕΥΒΟΙΑ': 'Εύβοια', 'ΑΤΤΙΚΗ': 'Αθήνα' };
-    const publicView = document.getElementById('publicView');
-    const loginView = document.getElementById('loginView');
-    const adminView = document.getElementById('adminView');
 
     async function loadLocations() {
       try {
@@ -117,115 +80,6 @@
 
       document.getElementById('searchInput').addEventListener('input', event => { state.query = event.target.value; renderLocations(); });
 
-      let isAdmin = false;
-
-      function updateAdminUI() {
-        document.getElementById('adminTopLink').textContent = isAdmin ? 'Αποσύνδεση' : 'Σύνδεση διαχειριστή';
-      }
-
-      function showView(view) {
-        publicView.hidden = view !== 'public';
-        loginView.hidden = view !== 'login';
-        adminView.hidden = view !== 'admin';
-      }
-
-      function populateRegionSelect() {
-        const select = document.getElementById('storeRegion');
-        const previousValue = select.value;
-        select.innerHTML = regionOrder.map(region => `<option value="${region}">${regionLabels[region] || region}</option>`).join('') + '<option value="__new__">+ Νέα κατηγορία</option>';
-        select.value = regionOrder.includes(previousValue) ? previousValue : regionOrder[0];
-      }
-
-      function resetLocationForm() {
-        document.getElementById('locationForm').reset();
-        document.getElementById('editingIndex').value = '';
-        document.getElementById('newRegionLabel').hidden = true;
-        document.getElementById('submitLocation').textContent = 'Προσθήκη καταστήματος';
-        document.getElementById('cancelEdit').hidden = true;
-        populateRegionSelect();
-      }
-
-      function renderAdminList() {
-        document.getElementById('adminCount').textContent = `${state.locations.length} σημεία`;
-        document.getElementById('adminLocationsList').innerHTML = state.locations.map((location, index) => `<div class="admin-row"><span class="store-info"><strong>${location.name}</strong><small>${regionLabels[location.region] || location.region} · ${[location.city, location.address].filter(Boolean).join(' · ')}</small></span><span class="admin-row-actions"><button type="button" class="text-button" data-edit="${index}">Επεξεργασία</button><button type="button" class="text-button danger" data-delete="${index}">Διαγραφή</button></span></div>`).join('') || '<p class="no-results">Δεν υπάρχουν καταστήματα.</p>';
-        document.querySelectorAll('[data-edit]').forEach(button => button.addEventListener('click', () => startEdit(Number(button.dataset.edit))));
-        document.querySelectorAll('[data-delete]').forEach(button => button.addEventListener('click', () => deleteLocation(Number(button.dataset.delete))));
-      }
-
-      function startEdit(index) {
-        const location = state.locations[index];
-        populateRegionSelect();
-        if (!regionOrder.includes(location.region)) { regionOrder.push(location.region); regionLabels[location.region] = location.region; populateRegionSelect(); }
-        document.getElementById('editingIndex').value = index;
-        document.getElementById('storeName').value = location.name;
-        document.getElementById('storeCity').value = location.city;
-        document.getElementById('storeAddress').value = location.address || '';
-        document.getElementById('storeRegion').value = location.region;
-        document.getElementById('newRegionLabel').hidden = true;
-        document.getElementById('submitLocation').textContent = 'Αποθήκευση αλλαγών';
-        document.getElementById('cancelEdit').hidden = false;
-        document.getElementById('adminMessage').textContent = '';
-        document.getElementById('storeName').focus();
-      }
-
-      function deleteLocation(index) {
-        if (!confirm(`Διαγραφή του "${state.locations[index].name}";`)) return;
-        state.locations.splice(index, 1);
-        renderFilters(); renderLocations(); renderAdminList();
-        document.getElementById('adminMessage').textContent = 'Διαγράφηκε.';
-      }
-
-      document.getElementById('downloadData').addEventListener('click', () => {
-        const blob = new Blob([JSON.stringify(state.locations, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'data.json';
-        link.click();
-        URL.revokeObjectURL(url);
-      });
-
-      if (new URLSearchParams(location.search).has('admin')) showView('login');
-
-      document.getElementById('adminTopLink').addEventListener('click', event => {
-        event.preventDefault();
-        if (isAdmin) { isAdmin = false; updateAdminUI(); showView('public'); }
-        else { showView('login'); }
-      });
-      document.getElementById('cancelLogin').addEventListener('click', () => showView('public'));
-      document.getElementById('loginForm').addEventListener('submit', event => {
-        event.preventDefault();
-        isAdmin = true;
-        event.target.reset();
-        document.getElementById('loginMessage').textContent = '';
-        updateAdminUI();
-        resetLocationForm();
-        renderAdminList();
-        showView('admin');
-      });
-      document.getElementById('storeRegion').addEventListener('change', event => {
-        const isNew = event.target.value === '__new__';
-        document.getElementById('newRegionLabel').hidden = !isNew;
-        if (isNew) document.getElementById('newRegionName').focus();
-      });
-      document.getElementById('cancelEdit').addEventListener('click', () => resetLocationForm());
-      document.getElementById('locationForm').addEventListener('submit', event => {
-        event.preventDefault();
-        let region = document.getElementById('storeRegion').value;
-        if (region === '__new__') {
-          const typedName = document.getElementById('newRegionName').value.trim();
-          if (!typedName) { document.getElementById('adminMessage').textContent = 'Γράψε όνομα κατηγορίας.'; return; }
-          region = typedName.toUpperCase();
-          if (!regionOrder.includes(region)) { regionOrder.push(region); regionLabels[region] = typedName; }
-        }
-        const location = { name: document.getElementById('storeName').value, city: document.getElementById('storeCity').value, address: document.getElementById('storeAddress').value, region };
-        const editingIndex = document.getElementById('editingIndex').value;
-        const message = editingIndex === ''
-          ? (state.locations.push(location), 'Προστέθηκε στη λίστα αυτής της συνεδρίας.')
-          : (state.locations[Number(editingIndex)] = location, 'Ενημερώθηκε.');
-        renderFilters(); renderLocations(); renderAdminList(); resetLocationForm();
-        document.getElementById('adminMessage').textContent = message;
-      });
     loadLocations();
   </script>
 </body>
