@@ -338,31 +338,6 @@ input {
   max-width: 520px;
 }
 
-.primary-link {
-  align-items: center;
-  display: inline-flex;
-  font-size: .8rem;
-  font-weight: 500;
-  gap: 36px;
-  letter-spacing: .04em;
-  margin-top: 42px;
-  padding: 17px 22px;
-  text-decoration: none;
-  transition: background .2s ease, color .2s ease, gap .2s ease;
-}
-
-.primary-link {
-  background: var(--lime);
-  color: var(--green-dark);
-}
-
-.primary-link:hover,
-.primary-link:focus-visible {
-  background: var(--white);
-  gap: 48px;
-  outline: 0;
-}
-
 .home-orbit {
   border: 1px solid rgba(255, 255, 255, .15);
   border-radius: 50%;
