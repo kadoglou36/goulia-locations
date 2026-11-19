@@ -105,6 +105,16 @@
   </footer>
 
   <script>
+    // Restore the path saved by 404.html (direct load/refresh of a route like
+    // /products) before routing runs, so the correct view renders immediately.
+    (function restorePathFromNotFoundRedirect() {
+      const redirect = sessionStorage.redirect;
+      delete sessionStorage.redirect;
+      if (redirect && redirect !== location.href) {
+        history.replaceState(null, '', redirect);
+      }
+    })();
+
     const state = { locations: [], region: 'ALL', query: '' };
     const eviaOrder = ['ΧΑΛΚΙΔΑ', 'ΒΑΣΙΛΙΚΟ', 'ΕΡΕΤΡΙΑ', 'ΑΜΑΡΥΝΘΟΣ', 'ΑΛΙΒΕΡΙ', 'ΒΕΛΟΣ', 'ΚΟΡΑΣΙΔΑ', 'ΝΕΟΧΩΡΙ', 'ΚΑΛΑΜΟΣ', 'ΛΕΠΟΥΡΑ', 'ΑΓ. ΑΠΟΣΤΟΛΟΙ', 'ΜΕΣΟΧΩΡΙΑ', 'ΝΕΑ ΣΤΥΡΑ', 'ΠΑΝΩ ΣΤΥΡΑ', 'ΜΑΡΜΑΡΙ', 'ΚΑΡΥΣΤΟΣ', 'ΠΑΡΑΛΙΑ ΚΥΜΗΣ', 'ΜΑΛΕΤΙΑΝΟΙ', 'ΚΑΘΕΝΟΙ'];
     const regionOrder = ['ΕΥΒΟΙΑ', 'ΑΤΤΙΚΗ'];

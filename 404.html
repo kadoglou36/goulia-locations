@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Γουλιά | Φυσικοί σπιτικοί χυμοί</title>
+  <!--
+    GitHub Pages serves this file for any path that isn't a real file
+    (e.g. a refresh on /products). This app routes client-side based on
+    window.location.pathname, so we stash the requested URL and redirect
+    to the root; index.html then restores the original path before it
+    renders the matching view.
+  -->
+  <script>
+    sessionStorage.redirect = location.href;
+  </script>
+  <meta http-equiv="refresh" content="0; url=/">
+</head>
+<body>
+</body>
+</html>
