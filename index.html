@@ -3,80 +3,352 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#e85d2a">
-    <title>Γουλιά | Πού θα μας βρεις</title>
-    <link rel="icon" type="image/png" href="logo.png">
-  
+  <meta name="theme-color" content="#173c2a">
+  <meta name="description" content="Φυσικοί σπιτικοί χυμοί Γουλιά — βρες το κοντινότερο σημείο πώλησης.">
+  <title>Γουλιά | Φυσικοί σπιτικοί χυμοί</title>
+  <link rel="icon" type="image/png" href="logo.png">
   <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-
-  <header class="hero">
-    <div class="hero-inner">
-      <img src="logo.png" alt="Γουλιά - Φυσικοί σπιτικοί χυμοί" class="brand-logo">
-      <p class="tagline">Λεμονάδα · Πορτοκαλάδα · Βυσσινάδα</p>
-    </div>
-    <div class="hero-copy"><p>Βρες το κοντινότερο σημείο που σερβίρει τους χυμούς μας.</p></div>
+  <header class="site-header">
+    <a class="header-logo" href="/homepage" aria-label="Γουλιά — αρχική σελίδα">
+      <img src="logo.png" alt="Γουλιά">
+    </a>
+    <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="siteMenu" aria-label="Άνοιγμα μενού">
+      <span class="menu-label">Μενού</span>
+      <span class="menu-icon" aria-hidden="true"><i></i><i></i><i></i></span>
+    </button>
   </header>
 
-  <main id="publicView" class="container">
-    <section class="toolbar" aria-label="Αναζήτηση σημείων πώλησης">
-      <label class="search-field"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" placeholder="Αναζήτηση σε πόλη ή κατάστημα" autocomplete="off"></label>
-      <div id="regionFilters" class="region-filters" role="tablist" aria-label="Περιοχή"></div>
+  <nav class="site-menu" id="siteMenu" aria-hidden="true" aria-label="Κύρια πλοήγηση">
+    <div class="menu-inner">
+      <p class="menu-kicker">Γουλιά</p>
+      <div class="menu-layout">
+        <div class="menu-links">
+          <a href="/products" data-route="products"><span>Τα προϊόντα μας</span><b aria-hidden="true">↗</b></a>
+          <a href="/locations" data-route="locations"><span>Σημεία πώλησης</span><b aria-hidden="true">↗</b></a>
+          <a href="/about" data-route="about"><span>Σχετικά με εμάς</span><b aria-hidden="true">↗</b></a>
+          <a href="/vision" data-route="vision"><span>Το όραμά μας</span><b aria-hidden="true">↗</b></a>
+          <a href="/blog" data-route="blog"><span>Blog</span><b aria-hidden="true">↗</b></a>
+          <a href="/contact" data-route="contact"><span>Επικοινωνία</span><b aria-hidden="true">↗</b></a>
+        </div>
+        <aside class="menu-aside">
+          <p>Φυσική απόλαυση,<br>εμπνευσμένη από το<br>σπίτι μας.</p>
+          <div class="menu-rule"></div>
+          <span>Λεμονάδα · Πορτοκαλάδα · Βυσσινάδα · Aloe vera</span>
+        </aside>
+      </div>
+      <div class="menu-footer">
+        <span>Εύβοια · Κάρυστος</span>
+        <a href="/homepage" data-route="home">Αρχική</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <section class="view home-view is-active" id="homeView" data-view="home" aria-labelledby="homeTitle">
+      <div class="home-orbit orbit-one" aria-hidden="true"></div>
+      <div class="home-orbit orbit-two" aria-hidden="true"></div>
+      <div class="home-content">
+        <p class="eyebrow light">Φυσικοί σπιτικοί χυμοί</p>
+        <h1 id="homeTitle">Η γεύση του<br><em>καλοκαιριού.</em></h1>
+        <p class="home-intro">Από τις πρώτες ύλες μέχρι την τελευταία σταγόνα, κρατάμε απλή αυτή που αγαπάμε: τη φυσική γεύση.</p>
+        <a class="primary-link" href="/locations"><span>Βρες μας κοντά σου</span><b aria-hidden="true">→</b></a>
+      </div>
+      <div class="home-note">
+        <span>Το όνομά μας γράφει<br>την ιστορία μας.</span>
+        <small>Από την Εύβοια</small>
+      </div>
+      <span class="scroll-hint" aria-hidden="true">Κύλησε</span>
     </section>
-    <div class="list-heading"><div><p class="eyebrow">Σημεία πώλησης</p><h2>Πού θα μας βρεις</h2></div><span id="resultCount" class="result-count"></span></div>
-    <div id="locationsList" class="locations-list"></div>
+
+    <section class="view locations-view" id="locationsView" data-view="locations" aria-labelledby="locationsTitle">
+      <div class="page-hero locations-hero">
+        <p class="eyebrow light">Σημεία πώλησης</p>
+        <h1 id="locationsTitle">Πού θα μας <em>βρεις</em></h1>
+        <p>Ανακάλυψε το πιο κοντινό κατάστημα και απόλαυσε τους χυμούς Γουλιά όπου κι αν βρίσκεσαι.</p>
+      </div>
+
+      <div class="locations-content">
+        <div class="locations-toolbar">
+          <label class="search-field">
+            <span aria-hidden="true">⌕</span>
+            <input id="searchInput" type="search" placeholder="Αναζήτηση σε πόλη ή κατάστημα" autocomplete="off" aria-label="Αναζήτηση σε πόλη ή κατάστημα">
+          </label>
+          <div id="regionFilters" class="region-filters" role="group" aria-label="Φίλτρο περιοχής"></div>
+        </div>
+        <div class="list-heading">
+          <div><p class="eyebrow">Επίλεξε περιοχή</p><h2>Κοντά σου</h2></div>
+          <span id="resultCount" class="result-count" aria-live="polite"></span>
+        </div>
+        <div id="locationsList" class="locations-list" aria-live="polite">
+          <p class="loading-message">Φόρτωση σημείων...</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="view editorial-view" id="editorialView" aria-labelledby="editorialTitle">
+      <div class="editorial-number" aria-hidden="true">Γ</div>
+      <div class="editorial-content">
+        <p class="eyebrow">Γουλιά</p>
+        <h1 id="editorialTitle"></h1>
+        <p id="editorialDescription"></p>
+        <div id="editorialDetails" class="editorial-details"></div>
+      </div>
+    </section>
   </main>
 
-  <footer class="footer"><span>Γουλιά, φτιαγμένη για να μοιράζεται.</span></footer>
+  <footer class="site-footer">
+    <a href="/homepage">Γουλιά</a>
+    <span>Φτιαγμένη για να μοιράζεται.</span>
+    <span>© <span id="currentYear"></span></span>
+  </footer>
 
   <script>
     const state = { locations: [], region: 'ALL', query: '' };
     const eviaOrder = ['ΧΑΛΚΙΔΑ', 'ΒΑΣΙΛΙΚΟ', 'ΕΡΕΤΡΙΑ', 'ΑΜΑΡΥΝΘΟΣ', 'ΑΛΙΒΕΡΙ', 'ΒΕΛΟΣ', 'ΚΟΡΑΣΙΔΑ', 'ΝΕΟΧΩΡΙ', 'ΚΑΛΑΜΟΣ', 'ΛΕΠΟΥΡΑ', 'ΑΓ. ΑΠΟΣΤΟΛΟΙ', 'ΜΕΣΟΧΩΡΙΑ', 'ΝΕΑ ΣΤΥΡΑ', 'ΠΑΝΩ ΣΤΥΡΑ', 'ΜΑΡΜΑΡΙ', 'ΚΑΡΥΣΤΟΣ', 'ΠΑΡΑΛΙΑ ΚΥΜΗΣ', 'ΜΑΛΕΤΙΑΝΟΙ', 'ΚΑΘΕΝΟΙ'];
-    // Εύβοια πρώτη, μετά Αθήνα (ΑΤΤΙΚΗ) — σταθερή σειρά ανεξάρτητα από τη σειρά στο data.json
     const regionOrder = ['ΕΥΒΟΙΑ', 'ΑΤΤΙΚΗ'];
     const regionLabels = { 'ΕΥΒΟΙΑ': 'Εύβοια', 'ΑΤΤΙΚΗ': 'Αθήνα' };
+    const routeContent = {
+      products: {
+        title: 'Τα προϊόντα μας',
+        description: 'Φρέσκοι φυσικοί χυμοί λεμονιού και πορτοκαλιού, με επιλογή aloe vera ή σκέτοι, και βυσσινάδα στην «σκέτη» εκδοχή.',
+        details: `
+          <div class="product-grid">
+            <article class="product-card orange">
+              <span class="product-mark">01</span>
+              <h2>Πορτοκαλάδα</h2>
+              <p>Χυμός πορτοκαλιού από φρούτα που έρχονται από την Πελοπόννησο.</p>
+            </article>
+            <article class="product-card lemon">
+              <span class="product-mark">02</span>
+              <h2>Λεμονάδα</h2>
+              <p>Χυμός λεμονιού από τοπικές καλλιέργειες.</p>
+            </article>
+            <article class="product-card cherry">
+              <span class="product-mark">03</span>
+              <h2>Βυσσινάδα</h2>
+              <p>Δροσερό ρόφημα βύσσινου με την ξεχωριστή, έντονη γεύση του φρούτου.</p>
+            </article>
+          </div>
+        `
+      },
+      about: {
+        title: 'Σχετικά με εμάς',
+        description: 'Η Γουλιά ξεκινά στην Κάρυστο, μέσα από μια οικογενειακή σχέση με τη γη και την aloe vera που ξεκίνησε το 2014.',
+        details: `
+          <div class="story-grid">
+            <article><span>2014</span><h2>Η αρχή</h2><p>Η οικογένεια Γουλέτα ξεκίνησε τη βιολογική καλλιέργεια aloe vera στην Κάρυστο Ευβοίας.</p></article>
+            <article><span>10 στρέμματα</span><h2>Η καλλιέργεια</h2><p>Στα χωράφια της οικογένειας καλλιεργούνται φυτά aloe vera, των οποίων τα φύλλα συλλέγονται πριν την παραγωγή.</p></article>
+            <article><span>2021</span><h2>Η Γουλιά</h2><p>Δημιουργείται ο φυσικός χυμός πορτοκαλιού ή λεμονιού με κομματάκια aloe vera.</p></article>
+          </div>
+          <div class="process-note"><strong>Από τον τόπο στο μπουκάλι</strong><p>Τα φύλλα συλλέγονται την προηγούμενη ημέρα, τα φρούτα φτάνουν στο εργαστήριο, χυμοποιούνται και οι χυμοί εμφιαλώνονται για την ψυχρή διανομή.</p></div>
+        `
+      },
+      vision: {
+        title: 'Το όραμά μας',
+        description: 'Να μεταφέρουμε τη φυσική γεύση της πρώτης ύλης από το εργαστήριό μας στην Κάρυστο, σε κάθε καθημερινή στιγμή.',
+        details: `
+          <div class="vision-points">
+            <article><span>01</span><div><h2>Φυσική προέλευση</h2><p>Τοπικά λεμόνια, πορτοκάλια από την Πελοπόννησο και φύλλα aloe vera από την οικογενειακή καλλιέργεια.</p></div></article>
+            <article><span>02</span><div><h2>Απλή επεξεργασία</h2><p>Οι χυμοί παράγονται και εμφιαλώνονται στο εργαστήριο της Καρύστου χωρίς συντηρητικά.</p></div></article>
+            <article><span>03</span><div><h2>Καθημερινή απόλαυση</h2><p>Σε γυάλινα μπουκάλια 300 και 500 ml, για το πρωινό, το σχολείο, τη δουλειά ή ένα διάλειμμα με σνακ.</p></div></article>
+          </div>
+        `
+      },
+      blog: {
+        title: 'Blog',
+        description: 'Νέα, στιγμές και ιστορίες από την Κάρυστο και την καθημερινή παραγωγή μας θα συγκεντρώνονται εδώ.',
+        details: ''
+      },
+      contact: {
+        title: 'Επικοινωνία',
+        description: 'Επικοινώνησε μαζί μας για τους χυμούς Γουλιά και τη διανομή τους.',
+        details: `
+          <div class="contact-grid">
+            <article><span>Εργαστήριο</span><h2>Τέρμα Αιόλου</h2><p>Κάρυστος 34001, Εύβοια</p><a class="text-link" href="https://www.google.com/maps/dir/?api=1&destination=38.017749,24.4218636" target="_blank" rel="noopener">Οδηγίες πλοήγησης ↗</a></article>
+            <article><span>Επικοινωνία</span><h2>Γιώργος Γουλέτας</h2><a href="tel:6971694716">697 169 4716</a></article>
+          </div>
+        `
+      }
+    };
+
+    const menuToggle = document.getElementById('menuToggle');
+    const siteMenu = document.getElementById('siteMenu');
+    const homeView = document.getElementById('homeView');
+    const locationsView = document.getElementById('locationsView');
+    const editorialView = document.getElementById('editorialView');
+    let menuFocusTimer;
+    const isLocalFile = window.location.protocol === 'file:';
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, character => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+      }[character]));
+    }
+
+    function normalize(value) {
+      return String(value).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    }
+
+    function setMenu(open) {
+      window.clearTimeout(menuFocusTimer);
+      document.body.classList.toggle('menu-open', open);
+      menuToggle.setAttribute('aria-expanded', String(open));
+      menuToggle.setAttribute('aria-label', open ? 'Κλείσιμο μενού' : 'Άνοιγμα μενού');
+      siteMenu.setAttribute('aria-hidden', String(!open));
+      if (open) {
+        menuFocusTimer = window.setTimeout(() => siteMenu.querySelector('a')?.focus(), 180);
+      }
+    }
+
+    function route() {
+      const localRoute = window.location.hash.slice(1);
+      const pathRoute = window.location.pathname.replace(/^\/+|\/+$/g, '');
+      const rawRoute = isLocalFile ? localRoute : pathRoute;
+      const routeName = !rawRoute || rawRoute === 'homepage' || rawRoute === 'index.html' ? 'home' : rawRoute;
+      const isHome = routeName === 'home';
+      const isLocations = routeName === 'locations';
+
+      homeView.classList.toggle('is-active', isHome);
+      locationsView.classList.toggle('is-active', isLocations);
+      editorialView.classList.toggle('is-active', !isHome && !isLocations);
+
+      document.querySelectorAll('.view').forEach(view => {
+        view.toggleAttribute('inert', !view.classList.contains('is-active'));
+      });
+
+      if (!isHome && !isLocations) {
+        const content = routeContent[routeName] || routeContent.about;
+        document.getElementById('editorialTitle').textContent = content.title;
+        document.getElementById('editorialDescription').textContent = content.description;
+        document.getElementById('editorialDetails').innerHTML = content.details;
+      }
+
+      document.title = isHome
+        ? 'Γουλιά | Φυσικοί σπιτικοί χυμοί'
+        : `${isLocations ? 'Σημεία πώλησης' : (routeContent[routeName]?.title || 'Γουλιά')} | Γουλιά`;
+
+      setMenu(false);
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      window.requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: 'instant' }));
+    }
 
     async function loadLocations() {
       try {
         const response = await fetch(`data.json?t=${Date.now()}`, { cache: 'no-store' });
-          if (!response.ok) throw new Error('Data unavailable');
-        const allLocations = await response.json();
-          state.locations = allLocations; renderFilters(); renderLocations();
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        state.locations = await response.json();
+        if (!Array.isArray(state.locations)) throw new TypeError('Invalid locations data');
+        renderFilters();
+        renderLocations();
       } catch (error) {
-          document.getElementById('locationsList').innerHTML = '<p class="no-results">Δεν ήταν δυνατή η φόρτωση των σημείων.</p>';
+        console.error('Unable to load locations:', error);
+        document.getElementById('locationsList').innerHTML = '<p class="no-results">Δεν ήταν δυνατή η φόρτωση των σημείων. Δοκιμάστε ξανά αργότερα.</p>';
+        document.getElementById('resultCount').textContent = '';
       }
     }
 
-      function normalize(value) { return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase(); }
-
-      function renderFilters() {
-        const regions = ['ALL', ...regionOrder.filter(region => state.locations.some(location => location.region === region))];
-        document.getElementById('regionFilters').innerHTML = regions.map(region => `<button class="filter-button ${state.region === region ? 'active' : ''}" data-region="${region}" role="tab" aria-selected="${state.region === region}">${region === 'ALL' ? 'Όλα' : (regionLabels[region] || region)}</button>`).join('');
-        document.querySelectorAll('[data-region]').forEach(button => button.addEventListener('click', () => { state.region = button.dataset.region; renderFilters(); renderLocations(); }));
-      }
-
-      function renderLocations() {
-        const query = normalize(state.query);
-        const filtered = state.locations.filter(location => (state.region === 'ALL' || location.region === state.region) && normalize(`${location.name} ${location.city} ${location.address}`).includes(query));
-        const grouped = filtered.reduce((groups, location) => { (groups[location.region] ||= []).push(location); return groups; }, {});
-      const listContainer = document.getElementById('locationsList');
-        document.getElementById('resultCount').textContent = `${filtered.length} σημεία`;
-        const regions = regionOrder.filter(region => grouped[region]);
-        listContainer.innerHTML = regions.map(region => {
-          const items = grouped[region].slice().sort((a, b) => {
-            const cityDiff = region === 'ΕΥΒΟΙΑ'
-              ? (eviaOrder.indexOf(a.city) < 0 ? 999 : eviaOrder.indexOf(a.city)) - (eviaOrder.indexOf(b.city) < 0 ? 999 : eviaOrder.indexOf(b.city))
-              : a.city.localeCompare(b.city, 'el');
-            return cityDiff !== 0 ? cityDiff : a.name.localeCompare(b.name, 'el');
-          });
-          return `<section class="city-group"><div class="city-heading"><h3>${regionLabels[region] || region}</h3><span>${items.length}</span></div><div class="store-list">${items.map(location => `<a class="store-row" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${location.name} ${location.address} ${location.city}`)}" target="_blank" rel="noopener"><span class="store-info"><strong>${location.name}</strong><small>${[location.city, location.address].filter(Boolean).join(' · ') || 'Χωρίς καταχωρημένη διεύθυνση'}</small></span><span class="map-arrow" aria-hidden="true">↗</span></a>`).join('')}</div></section>`;
-        }).join('') || '<p class="no-results">Δεν βρέθηκαν σημεία με αυτά τα κριτήρια.</p>';
+    function renderFilters() {
+      const regions = ['ALL', ...regionOrder.filter(region => state.locations.some(location => location.region === region))];
+      document.getElementById('regionFilters').innerHTML = regions.map(region => `
+        <button class="filter-button ${state.region === region ? 'active' : ''}" type="button" data-region="${region}" aria-pressed="${state.region === region}">
+          ${region === 'ALL' ? 'Όλα' : (regionLabels[region] || region)}
+        </button>
+      `).join('');
+      document.querySelectorAll('[data-region]').forEach(button => button.addEventListener('click', () => {
+        state.region = button.dataset.region;
+        renderFilters();
+        renderLocations();
+      }));
     }
 
-      document.getElementById('searchInput').addEventListener('input', event => { state.query = event.target.value; renderLocations(); });
+    function getCityOrder(region, city) {
+      if (region !== 'ΕΥΒΟΙΑ') return 0;
+      const index = eviaOrder.indexOf(city);
+      return index === -1 ? 999 : index;
+    }
 
+    function locationMarkup(location) {
+      const name = escapeHtml(location.name);
+      const city = escapeHtml(location.city);
+      const address = escapeHtml(location.address);
+      const mapQuery = encodeURIComponent(`${location.name} ${location.address || ''} ${location.city}`);
+      return `<a class="store-row" href="https://www.google.com/maps/search/?api=1&query=${mapQuery}" target="_blank" rel="noopener">
+        <span class="store-number"></span>
+        <span class="store-info">
+          <strong>${name}</strong>
+          <small>${[city, address].filter(Boolean).join(' · ')}</small>
+        </span>
+        <span class="map-arrow" aria-hidden="true">↗</span>
+      </a>`;
+    }
+
+    function renderLocations() {
+      const query = normalize(state.query);
+      const filtered = state.locations.filter(location =>
+        (state.region === 'ALL' || location.region === state.region) &&
+        normalize(`${location.name} ${location.city} ${location.address || ''}`).includes(query)
+      );
+      const grouped = filtered.reduce((groups, location) => {
+        (groups[location.region] ||= []).push(location);
+        return groups;
+      }, {});
+      const regions = regionOrder.filter(region => grouped[region]);
+
+      document.getElementById('resultCount').textContent = `${filtered.length} σημεία`;
+      document.getElementById('locationsList').innerHTML = regions.map(region => {
+        const items = grouped[region].slice().sort((a, b) => {
+          const cityDiff = getCityOrder(region, a.city) - getCityOrder(region, b.city);
+          return cityDiff || a.city.localeCompare(b.city, 'el') || a.name.localeCompare(b.name, 'el');
+        });
+        return `<section class="city-group">
+          <div class="city-heading">
+            <h3>${regionLabels[region] || escapeHtml(region)}</h3>
+            <span>${items.length} σημεία</span>
+          </div>
+          <div class="store-list">${items.map(locationMarkup).join('')}</div>
+        </section>`;
+      }).join('') || '<p class="no-results">Δεν βρέθηκαν σημεία με αυτά τα κριτήρια.</p>';
+
+      document.querySelectorAll('.store-list').forEach(list => {
+        list.querySelectorAll('.store-number').forEach((number, index) => {
+          number.textContent = String(index + 1).padStart(2, '0');
+        });
+      });
+    }
+
+    menuToggle.addEventListener('click', () => setMenu(!document.body.classList.contains('menu-open')));
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && document.body.classList.contains('menu-open')) {
+        setMenu(false);
+        menuToggle.focus();
+      }
+    });
+    document.querySelectorAll('a[href^="/"]').forEach(link => {
+      link.addEventListener('click', event => {
+        if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        event.preventDefault();
+        const destination = link.getAttribute('href');
+        if (isLocalFile) {
+          window.location.hash = destination.replace(/^\/+/, '') || 'homepage';
+        } else if (destination !== window.location.pathname) {
+          window.history.pushState(null, '', destination);
+        }
+        route();
+      });
+    });
+    document.getElementById('searchInput').addEventListener('input', event => {
+      state.query = event.target.value;
+      renderLocations();
+    });
+    window.addEventListener('popstate', route);
+    window.addEventListener('hashchange', () => {
+      if (isLocalFile) route();
+    });
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+    route();
     loadLocations();
   </script>
 </body>
